@@ -27,6 +27,7 @@ module "network" {
 }
 
 module "DB_Instance" {
+  depends_on = [module.network]
   source = "./Modules/VM"
   location = var.location
   name_resource_group = azurerm_resource_group.rg.name

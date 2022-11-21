@@ -19,7 +19,7 @@ variable "ipPublic" {
   
 }
 variable "vm_name" {
-  default = "VM_1"
+  default = "maquina01"
 }
 
 variable "user_name" {
@@ -27,7 +27,7 @@ variable "user_name" {
 }
 
 variable "user_password" {
-  default = "password"
+  default = "Password01"
 }
 
 # Nombre de la NIC
