@@ -17,3 +17,8 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
+# Módulo instancia
+
+module "vm" {
+  source = "./Modules/VM"
+}
