@@ -23,5 +23,15 @@ module "network" {
   source = "./Modules/Network"
   location = var.location
   name_resource_group = azurerm_resource_group.rg.name
+  publicip_name = var.publicip_name
+}
+
+module "DB_Instance" {
+  source = "./Modules/VM"
+  location = var.location
+  name_resource_group = azurerm_resource_group.rg.name
+  sub1 = var.subnet1_name
+  VPC = var.vnet_name
+  ipPublic = var.publicip_name
 }
 

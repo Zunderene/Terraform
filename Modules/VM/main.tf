@@ -1,7 +1,18 @@
+data "azurerm_subnet" "sub01id" {
+  name                 = var.sub1
+  virtual_network_name = var.VPC
+  resource_group_name  = var.name_resource_group
+}
+
+data "azurerm_public_ip" "ipPublic" {
+  name                = var.ipPublic
+  resource_group_name = var.name_resource_group
+}
+
 resource "azurerm_virtual_machine" "Vm" {
     name                  = "${var.vm_name}"
     location              = "${var.location}"
-    resource_group_name   = "${azurerm_resource_group.rg.name}"
+    resource_group_name   = var.name_resource_group
     network_interface_ids = ["${azurerm_network_interface.NIC.id}"]
     vm_size               = "Standard_DS1_v2"
 
@@ -32,5 +43,21 @@ resource "azurerm_virtual_machine" "Vm" {
     /*boot_diagnostics {
         enabled = "false"
     }*/
+
+}
+
+# Creando interfaz de red
+resource "azurerm_network_interface" "NIC" {
+    name                      = "${var.NIC_name1}"
+    location                  = "${var.location}"
+    resource_group_name       = "${var.name_resource_group}"
+    #network_security_group_id = "${azurerm_network_security_group.NSG.name}"
+
+    ip_configuration {
+        name                          = "${var.NIC_name_config}"
+        subnet_id                     = "${data.azurerm_subnet.sub01id.id}"
+        private_ip_address_allocation = "Dynamic"
+        public_ip_address_id          = "${data.azurerm_public_ip.ipPublic.id}"
+    }
 
 }
