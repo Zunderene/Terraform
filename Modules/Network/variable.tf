@@ -1,4 +1,16 @@
 #----------------------------------- Net connection---------------------
+
+#Localizacion 
+variable "location" {
+
+}
+
+# Grupo de recurso 
+
+variable "name_resource_group"{
+
+}
+
 # Nombre red virtual
 variable "vnet_name" {
   default = "firs_vnet"
@@ -6,7 +18,7 @@ variable "vnet_name" {
 
 # Direccion red virtual
 variable "address_space" {
-  default = "10.0.0.0/16"
+  default = ["10.0.0.0/16"]
 }
 
 # Nombre subnet1

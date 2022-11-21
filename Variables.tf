@@ -1,7 +1,7 @@
 # Fichero de variables. 
 
 # Nombre del grupo de recursos.
-variable "name_resuorce_group" {
+variable "name_resource_group" {
   default = "Proyecto_Cloud"
 }
 

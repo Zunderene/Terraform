@@ -13,12 +13,15 @@ provider "azurerm" {
 
 # Grupo de recurso
 resource "azurerm_resource_group" "rg" {
-  name     = var.name_resuorce_group
+  name     = var.name_resource_group
   location = var.location
 }
 
 # Módulo instancia
-
-module "vm" {
-  source = "./Modules/VM"
+ 
+module "network" {
+  source = "./Modules/Network"
+  location = var.location
+  name_resource_group = azurerm_resource_group.rg.name
 }
+
