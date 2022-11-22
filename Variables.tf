@@ -10,14 +10,13 @@ variable "location" {
   default = "West Europe"
 }
 
-# Nombre subnet1
-variable "subnet1_name" {
-  default = "subnet1"
+variable "location2" {
+  default = "North Europe"
 }
 
-# Nombre subnet2
-variable "subnet2_name" {
-  default = "subnet2"
+# Nombre subnet1
+variable "subnet" {
+  default = "subnet"
 }
 
 # Nombre red virtual

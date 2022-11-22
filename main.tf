@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=2.48.0"
+      version = "~>3.0"
     }
   }
 }
@@ -17,10 +17,21 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
+resource "azire" "name" {
+  
+}
+
 # Módulo network
-module "network" {
+module "network_vpc_west" {
   source = "./Modules/Network"
   location = var.location
+  name_resource_group = azurerm_resource_group.rg.name
+  publicip_name = var.publicip_name
+}
+# Módulo network
+module "network_vpc_north" {
+  source = "./Modules/Network"
+  location = var.location2
   name_resource_group = azurerm_resource_group.rg.name
   publicip_name = var.publicip_name
 }
@@ -30,18 +41,12 @@ module "DB_Instance" {
   source = "./Modules/VM"
   location = var.location
   name_resource_group = azurerm_resource_group.rg.name
-  sub1 = var.subnet1_name
+  subred = var.subnet1_name
   VPC = var.vnet_name
   ipPublic = var.publicip_name
 }
 
-# Módulo network
-module "network_sub2" {
-  source = "./Modules/Network"
-  location = var.location
-  name_resource_group = azurerm_resource_group.rg.name
-  publicip_name = var.publicip_name
-}
+
 
 # Creación subred del recovery disaster
 module "DB_Recovery_Disaster" {

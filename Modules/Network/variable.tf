@@ -1,15 +1,10 @@
 #----------------------------------- Net connection---------------------
 
 #Localizacion 
-variable "location" {
-
-}
+variable "location" {}
 
 # Grupo de recurso 
-
-variable "name_resource_group"{
-
-}
+variable "name_resource_group"{}
 
 # Nombre red virtual
 variable "vnet_name" {
@@ -38,6 +33,5 @@ variable "NSG_name" {
 }
 
 # Nombre de la ip pública
-variable "publicip_name" {
-}
+variable "publicip_name" {}
 
