@@ -6,9 +6,14 @@ variable "location" {}
 # Grupo de recurso 
 variable "name_resource_group"{}
 
+# IpPublica
+variable "public_ip_id" {
+
+}
+
 # Nombre red virtual
 variable "vnet_name" {
-  default = "firs_vnet"
+  default = "vnet"
 }
 
 # Direccion red virtual
@@ -17,21 +22,13 @@ variable "address_space" {
 }
 
 # Nombre subnet1
-variable "subnet1_name" {
-  default = "subnet1"
+variable "subred" {
+  default = "subnet"
 }
 
 # Dirección subnet 1
-variable "subnet1_address" {
-  default = "10.0.1.0/24"
+variable "subnet_address" {
+  default = ["10.0.1.0/24"]
 }
 
-
-# Nombre del nsg
-variable "NSG_name" {
-  default     = "NSG1"
-}
-
-# Nombre de la ip pública
-variable "publicip_name" {}
 

@@ -11,11 +11,11 @@ variable "subred" {
   
 }
 
-variable "VPC" {
+variable "vnet_name" {
   
 }
 
-variable "ipPublic" {
+variable "public_ip_id" {
   
 }
 
@@ -38,6 +38,10 @@ variable "user_password" {
 # Nombre de la NIC
 variable "NIC_name1" {
   default     = "NIC1-Azure"
+}
+
+variable "NSG_name" {
+  default="segurity-group"
 }
 
 # Nombre de la configuración ip

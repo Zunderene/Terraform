@@ -4,21 +4,15 @@
 variable "name_resource_group" {
   default = "Proyecto_Cloud"
 }
-
 # Localización
 variable "location" {
-  default = "West Europe"
-}
-
-variable "location2" {
-  default = "North Europe"
+  default = [ "North Europe", "West Europe"]
 }
 
 # Nombre subnet1
 variable "subnet" {
   default = "subnet"
 }
-
 # Nombre red virtual
 variable "vnet_name" {
   default = "firs_vnet"
