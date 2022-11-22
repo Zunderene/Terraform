@@ -7,7 +7,7 @@ variable "name_resource_group" {
   
 }
 
-variable "sub1" {
+variable "subred" {
   
 }
 
@@ -18,8 +18,13 @@ variable "VPC" {
 variable "ipPublic" {
   
 }
+
 variable "vm_name" {
   default = "maquina01"
+}
+
+variable "vm_name2" {
+  default = "maquina02"
 }
 
 variable "user_name" {

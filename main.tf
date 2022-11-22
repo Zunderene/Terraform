@@ -17,8 +17,7 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
-# Módulo instancia
- 
+# Módulo network
 module "network" {
   source = "./Modules/Network"
   location = var.location
@@ -36,3 +35,21 @@ module "DB_Instance" {
   ipPublic = var.publicip_name
 }
 
+# Módulo network
+module "network_sub2" {
+  source = "./Modules/Network"
+  location = var.location
+  name_resource_group = azurerm_resource_group.rg.name
+  publicip_name = var.publicip_name
+}
+
+# Creación subred del recovery disaster
+module "DB_Recovery_Disaster" {
+  depends_on = [module.network_sub2]
+  source = "./Modules/VM"
+  location = var.location
+  name_resource_group = azurerm_resource_group.rg.name
+  subred = var.subnet2_name
+  VPC = var.vnet_name
+  ipPublic = var.publicip_name
+}

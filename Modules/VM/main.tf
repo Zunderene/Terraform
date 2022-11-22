@@ -1,5 +1,5 @@
 data "azurerm_subnet" "sub01id" {
-  name                 = var.sub1
+  name                 = var.subred
   virtual_network_name = var.VPC
   resource_group_name  = var.name_resource_group
 }

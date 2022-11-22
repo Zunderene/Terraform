@@ -15,6 +15,11 @@ variable "subnet1_name" {
   default = "subnet1"
 }
 
+# Nombre subnet2
+variable "subnet2_name" {
+  default = "subnet2"
+}
+
 # Nombre red virtual
 variable "vnet_name" {
   default = "firs_vnet"
