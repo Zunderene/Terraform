@@ -1,30 +1,27 @@
-# Fichero de variables. 
+#############################
+## aplicacion - Variables ##
+#############################
 
-# Nombre del grupo de recursos.
-variable "name_resource_group" {
-  default = "Proyecto_Cloud"
+# Nombre del proyecto.
+
+variable "proyecto" {
+  type = string
+  description = "Este nombre se usa para nombrar todos los recursos"
 }
-# Localización
+
+# Localizacion
 variable "location" {
-  default = [ "North Europe", "West Europe"]
+  type = string
+  description = "Esta variable almacena la region donde va ha ser creado el grupo ded recursos"
+  default = "west europe"
 }
 
-# Nombre subnet1
-variable "subnet" {
-  default = "subnet"
+# Entorno
+variable "entorno"{
+  type = string
+  description = "Esta variable indica de que modulo fue procesado"
+  #default="cloud"
 }
-# Nombre red virtual
-variable "vnet_name" {
-  default = "firs_vnet"
-}
-# Nombre de la ip pública
-variable "publicip_name" {
-  default = "Public-Ip"
-}
-
-
-
-
 
 
 

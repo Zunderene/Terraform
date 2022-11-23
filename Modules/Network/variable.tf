@@ -1,34 +1,32 @@
-#----------------------------------- Net connection---------------------
 
-#Localizacion 
-variable "location" {}
+##############################
+## Net connection - Variables ##
+##############################
 
-# Grupo de recurso 
-variable "name_resource_group"{}
-
-# IpPublica
-variable "public_ip_id" {
-
+variable "network-vnet-cidr" {
+  type        = string
+  description = "El CIDR de la red virtual (VNET)"
 }
 
-# Nombre red virtual
-variable "vnet_name" {
-  default = "vnet"
+variable "network-subnet-cidr" {
+  type        = string
+  description = "El CIDR de la subnet"
+}
+# Nombre del proyecto.
+variable "proyecto" {
+  type = string
+  description = "Este nombre se usa para nombrar todos los recursos"
 }
 
-# Direccion red virtual
-variable "address_space" {
-  default = ["10.0.0.0/16"]
+# Localizacion
+variable "location" {
+  type = string
+  description = "Esta variable almacena la region donde va ha ser creado el grupo ded recursos"
+  default = "west europe"
 }
 
-# Nombre subnet1
-variable "subred" {
-  default = "subnet"
+# Entorno
+variable "entorno"{
+  type = string
+  description = "Esta variable indica de que modulo fue procesado"
 }
-
-# Dirección subnet 1
-variable "subnet_address" {
-  default = ["10.0.1.0/24"]
-}
-
-

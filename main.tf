@@ -2,83 +2,76 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~>3.0"
+      version = "= 2.59.0"
     }
   }
 }
 
 provider "azurerm" {
+  subscription_id = "d154b22a-00e9-4d61-bccd-1c77b06247da" 
+  client_id = "df4f9529-a125-4b6c-aed4-23b11c85efcf" 
+  client_secret = "hbW8Q~Uh2SQ~T9lAnhCmj6IqC50rYaAUXOOZ.cTC" 
+  tenant_id = "b904303e-f6ca-40b3-9015-8948e09309bf" 
   features {}
 }
 
-# Grupo de recurso
-resource "azurerm_resource_group" "rg" {
-  name     = var.name_resource_group
-  location =  var.location[0]
-}
 
-# Creación de IP pública
-resource "azurerm_public_ip" "publicIP" {
-  depends_on = [
-    azurerm_resource_group.rg
-  ]
-    name                         =  var.publicip_name
-    location                     =  var.location[0]
-    resource_group_name          = "${var.name_resource_group}"
-    allocation_method            = "Static"
-    sku                          = "Standard"
-}
 
 module "network_vpc_west" {
-  depends_on = [
-    resource.azurerm_public_ip.publicIP
-  ]
   source = "./Modules/Network"
-  location = var.location[0]
-  subred = var.subnet
-  vnet_name = var.vnet_name
-  name_resource_group = azurerm_resource_group.rg.name
-  public_ip_id = azurerm_public_ip.publicIP.id
-}
-
-module "DB_Instance" {
-  depends_on = [module.network_vpc_west]
-  source = "./Modules/VM"
-  location = var.location[0]
-  name_resource_group = azurerm_resource_group.rg.name
-  subred = var.subnet
-  vnet_name = var.vnet_name
-  public_ip_id = azurerm_public_ip.publicIP.id
+  location = var.location
+  proyecto = var.proyecto
+  entorno  = var.entorno
+  network-subnet-cidr = "10.128.1.0/24"
+  network-vnet-cidr = "10.128.0.0/16"
 
 }
 
-module "Recovery" {
-  depends_on = [module.network_vpc_west]
-  source = "./Modules/VM"
-  vm_name = "recovery"
-  NIC_name1 = "recovery-nic"
 
-  location = var.location[0]
-  name_resource_group = azurerm_resource_group.rg.name
-  subred = var.subnet
-  vnet_name = var.vnet_name
-  public_ip_id = azurerm_public_ip.publicIP.id
+module "VM" {
+  source = "./Modules/VM-SQL"
+  network_resource_group = module.network_vpc_west.network_resource_group
+  network_subnet = module.network_vpc_west.network_subnet_id
+  location = var.location
+  proyecto = var.proyecto
+  entorno  = var.entorno
+  sql_admin_password = "password_01"
+  sql_admin_username = "hector01"
+
+  generate_admin_ssh_key = false
+  public = false
 
 }
 
-module "storage" {
-  source = "./Modules/Storage"
-  depends_on = [
-    azurerm_resource_group.rg
-  ]
-  name_resource_group = var.name_resource_group
-  location =  var.location[0]
+module "VM02" {
+  source = "./Modules/VM-SQL"
+  network_resource_group = module.network_vpc_west.network_resource_group
+  network_subnet = module.network_vpc_west.network_subnet_id
+  location = var.location
+  proyecto = var.proyecto
+  entorno  = var.entorno
+  sql_admin_password = "password_01"
+  sql_admin_username = "hector01"
+
+  public = true
+  generate_admin_ssh_key = true
+
 }
 
-module "K8s" {
-  depends_on = [module.network_vpc_west]
+module "k8" {
   source = "./Modules/K8"
-  name_resource_group = var.name_resource_group
-  location =  var.location[0]
+  depends_on = [
+    module.network_vpc_west
+  ]
+  location = var.location
+  name_resource_group = module.network_vpc_west.network_resource_group
 
+}
+module "storage" {
+  depends_on = [
+    module.network_vpc_west
+  ]
+  source = "./Modules/Storage"
+  location = var.location
+  name_resource_group = module.network_vpc_west.network_resource_group.name
 }
