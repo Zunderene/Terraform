@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "= 2.59.0"
+      version = "~> 3.0"
     }
   }
 }
@@ -29,6 +29,9 @@ module "network_vpc_west" {
 
 
 module "VM" {
+  depends_on = [
+    module.network_vpc_west
+  ]
   source = "./Modules/VM-SQL"
   network_resource_group = module.network_vpc_west.network_resource_group
   network_subnet = module.network_vpc_west.network_subnet_id
@@ -44,7 +47,10 @@ module "VM" {
 }
 
 module "VM02" {
-  source = "./Modules/VM-SQL"
+  source = "./Modules/VM"
+  depends_on = [
+    module.network_vpc_west
+  ]
   network_resource_group = module.network_vpc_west.network_resource_group
   network_subnet = module.network_vpc_west.network_subnet_id
   location = var.location
@@ -58,15 +64,15 @@ module "VM02" {
 
 }
 
-module "k8" {
-  source = "./Modules/K8"
-  depends_on = [
-    module.network_vpc_west
-  ]
-  location = var.location
-  name_resource_group = module.network_vpc_west.network_resource_group
+#module "k8" {
+#  source = "./Modules/K8"
+#  depends_on = [
+#    module.network_vpc_west
+#  ]
+#  location = var.location
+#  name_resource_group = module.network_vpc_west.network_resource_group
 
-}
+#}
 module "storage" {
   depends_on = [
     module.network_vpc_west

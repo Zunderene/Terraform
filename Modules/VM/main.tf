@@ -25,7 +25,7 @@ resource "random_string" "vm-name" {
 # Este grupo de recurso esta pensado solo accesible desde el interior de la red virtual no sale de internet
 # Advite acceso puerto postgresSQL y SSH
 #
-resource "azurerm_network_security_group" "vm-nsg-02" {
+resource "azurerm_network_security_group" "vm-nsg" {
     depends_on = [ var.network_resource_group]
     name                    = "sql-${lower(var.entorno)}-${random_string.vm-name.result}-nsg"
     location                = var.network_resource_group.location
@@ -40,8 +40,8 @@ resource "azurerm_network_security_group" "vm-nsg-02" {
         protocol                   = "Tcp"
         source_port_range          = "*"
         destination_port_range     = "5432"
-        source_address_prefix      = "VirtualNetwork"
-        destination_address_prefix = "VirtualNetwork"
+        source_address_prefix      = "Internet"
+        destination_address_prefix = "Internet"
   }
 
   security_rule {
@@ -53,8 +53,8 @@ resource "azurerm_network_security_group" "vm-nsg-02" {
         protocol                   = "Tcp"
         source_port_range          = "*"
         destination_port_range     = "22"
-        source_address_prefix      = "VirtualNetwork"
-        destination_address_prefix = "VirtualNetwork"
+        source_address_prefix      = "*"
+        destination_address_prefix = "*"
   }
   tags = {
     environment = var.entorno
@@ -62,8 +62,15 @@ resource "azurerm_network_security_group" "vm-nsg-02" {
 
 }
 
-# Crea la interfaz de red VM
-resource "azurerm_network_interface" "vm-private-nic-02" {
+resource "azurerm_public_ip" "vm_ip" {
+  name                = "ip-${random_string.vm-name.result}-public"
+  location            = var.network_resource_group.location
+  resource_group_name = var.network_resource_group.name
+  allocation_method   = "Static"
+}
+
+# Create Network Card for SQL VM
+resource "azurerm_network_interface" "vm-private-nic" {
   depends_on=[var.network_resource_group]
 
   name                = "vm-${random_string.vm-name.result}-nic"
@@ -74,7 +81,7 @@ resource "azurerm_network_interface" "vm-private-nic-02" {
     name                          = "Internet"
     subnet_id                     = var.network_subnet
     private_ip_address_allocation = "Dynamic"
-   
+    public_ip_address_id          =  azurerm_public_ip.vm_ip.id 
   }
 
   tags = { 
@@ -82,14 +89,15 @@ resource "azurerm_network_interface" "vm-private-nic-02" {
   }
 }
 
-# Creacion de la VM
+
 resource "azurerm_virtual_machine" "Vm" {
-    depends_on=[azurerm_network_interface.vm-private-nic-02]
+    depends_on=[azurerm_network_interface.vm-private-nic]
+
     name                = "vm-${lower(var.entorno)}-${random_string.vm-name.result}-vm"
     location            = var.network_resource_group.location
     resource_group_name = var.network_resource_group.name
   
-    network_interface_ids =  [azurerm_network_interface.vm-private-nic-02.id] 
+    network_interface_ids =  [azurerm_network_interface.vm-private-nic.id] 
     vm_size               = "Standard_DS1_v2"
 
     delete_os_disk_on_termination    = var.sql_delete_os_disk_on_termination
@@ -126,13 +134,7 @@ resource "azurerm_virtual_machine" "Vm" {
 
 }
 
-# Union de la interfaz de red con el grupo de seguridad.
-resource "azurerm_network_interface_security_group_association" "NSG" {
-  network_interface_id      = azurerm_network_interface.vm-private-nic-02.id 
-  network_security_group_id = azurerm_network_security_group.vm-nsg-02.id
+resource "azurerm_network_interface_security_group_association" "NSG-Public" {
+  network_interface_id      = azurerm_network_interface.vm-private-nic.id 
+  network_security_group_id = azurerm_network_security_group.vm-nsg.id
 }
-
-#resource "azurerm_subnet_network_security_group_association" "GSUBC" {
-#  subnet_id                 = var.network_subnet
-#  network_security_group_id = azurerm_network_security_group.vm-nsg-02.id
-#}
