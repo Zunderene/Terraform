@@ -61,3 +61,7 @@ variable "generate_admin_ssh_key" {
   type = bool
   default = false
 }
+
+variable "key" {
+   default = "~/.ssh/id_rsa.pub"
+}

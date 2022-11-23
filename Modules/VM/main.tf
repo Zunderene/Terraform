@@ -88,9 +88,14 @@ resource "azurerm_network_interface" "vm-private-nic" {
     environment = var.entorno
   }
 }
+resource "tls_private_key" "ssh" {
+    algorithm = "RSA"
+    rsa_bits = 4096
+}
 
+# Create virtual machine
+resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
 
-resource "azurerm_virtual_machine" "Vm" {
     depends_on=[azurerm_network_interface.vm-private-nic]
 
     name                = "vm-${lower(var.entorno)}-${random_string.vm-name.result}-vm"
@@ -98,41 +103,37 @@ resource "azurerm_virtual_machine" "Vm" {
     resource_group_name = var.network_resource_group.name
   
     network_interface_ids =  [azurerm_network_interface.vm-private-nic.id] 
-    vm_size               = "Standard_DS1_v2"
+    size               = "Standard_DS1_v2"
 
-    delete_os_disk_on_termination    = var.sql_delete_os_disk_on_termination
-    delete_data_disks_on_termination = var.sql_delete_data_disks_on_termination
+    #delete_os_disk_on_termination    = var.sql_delete_os_disk_on_termination
+    #delete_data_disks_on_termination = var.sql_delete_data_disks_on_termination
 
+  os_disk {
+    name                    = "disk${random_string.vm-name.result}vm"
+    caching                 = "ReadWrite"
+    storage_account_type    = "Standard_LRS"
+  }
 
-    storage_os_disk {
-        name              = "disk${random_string.vm-name.result}vm"
-        caching           = "ReadWrite"
-        create_option     = "FromImage"
-        managed_disk_type = "Standard_LRS"
-    }
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
 
-    storage_image_reference {
-        publisher = "Canonical"
-        offer     = "UbuntuServer"
-        sku       = "18.04-LTS"
-        version   = "latest"
-    }
+  computer_name                   = "myvm"
+  admin_username                  = "azureuser"
+  disable_password_authentication = true
 
-    os_profile {
-        computer_name  = "vm-${random_string.vm-name.result}-vm"
-        admin_username = var.sql_admin_username
-        admin_password = var.sql_admin_password
-    }
-
-    os_profile_linux_config {
-        disable_password_authentication = false
-    }
-
-    /*boot_diagnostics {
-        enabled = "false"
-    }*/
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = tls_private_key.ssh.public_key_openssh
+  }
 
 }
+
+
+
 
 resource "azurerm_network_interface_security_group_association" "NSG-Public" {
   network_interface_id      = azurerm_network_interface.vm-private-nic.id 
