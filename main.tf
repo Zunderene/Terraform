@@ -8,6 +8,10 @@ terraform {
 }
 
 provider "azurerm" {
+  subscription_id = "3fc95c44-856c-4cf4-bba4-e47a118a15e0" 
+  client_id = "736b4a43-569b-4821-83fa-ae64021824a7" 
+  client_secret = "nXs8Q~HHvKwGKsRG2pJUZDzXcK27syqHW_wFeaQm" 
+  tenant_id = "d1c80090-db78-4d4d-8950-d47ed6cc756b" 
   features {}
 }
 
@@ -75,10 +79,10 @@ module "storage" {
   location =  var.location[0]
 }
 
-module "K8s" {
-  depends_on = [module.network_vpc_west]
-  source = "./Modules/K8"
-  name_resource_group = var.name_resource_group
-  location =  var.location[0]
-
-}
+#module "K8s" {
+#  depends_on = [module.network_vpc_west]
+#  source = "./Modules/K8"
+#  name_resource_group = var.name_resource_group
+#  location =  var.location[0]
+#
+#}
