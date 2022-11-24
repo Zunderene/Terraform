@@ -70,9 +70,7 @@ resource "azurerm_network_security_group" "vm-nsg" {
 
 }
 
-resource "az" "name" {
-  
-}
+
 
 resource "azurerm_public_ip" "vm_ip" {
   name                = "ip-${random_string.vm-name.result}-public"

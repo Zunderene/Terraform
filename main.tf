@@ -78,11 +78,11 @@ module "k8" {
 
 }
 
-module "storage" {
-  depends_on = [
-    module.network_vpc_west
-  ]
-  source = "./Modules/Storage"
-  location = var.location
-  name_resource_group = module.network_vpc_west.network_resource_group.name
-}
+#module "storage" {
+#  depends_on = [
+#    module.network_vpc_west
+#  ]
+#  source = "./Modules/Storage"
+#  location = var.location
+#  name_resource_group = module.network_vpc_west.network_resource_group.name
+#}
