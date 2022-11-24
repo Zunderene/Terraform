@@ -1,13 +1,4 @@
 terraform {
-   backend "azurerm" {
-    storage_account_name = "__terraformstorageaccount__"
-    container_name       = "__terraformcontainer__"
-    key                  = "__terraformtfstatefile__"
-    access_key           = "__storagekey__"
-    features{
-    }
-  }
-
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -21,11 +12,14 @@ terraform {
   }
 }
 
-  provider "azurerm" {
-    features {
-      
-    }
-  }
+provider "azurerm" {
+  subscription_id = "326e5b7f-edaa-4ea8-92cd-8ec52eadfbac" 
+  client_id = "79022cc2-c368-4db5-9f68-ff1299e4f401" 
+  client_secret = "d9i8Q~x_ZUCI~LYSrndgWWm79BVYVOe-EBL4rajS" 
+  tenant_id = "523c5590-88ac-498d-ae92-bc3f4f3f7b28" 
+  features {}
+}
+
 
 
 module "network_vpc_west" {
@@ -37,7 +31,6 @@ module "network_vpc_west" {
   network-vnet-cidr = "10.128.0.0/16"
 
 }
-
 
 module "VM" {
   depends_on = [
@@ -75,20 +68,12 @@ module "VM02" {
 
 }
 
-module "k8" {
-  source = "./Modules/K8"
-  depends_on = [
-    module.network_vpc_west
-  ]
-  location = var.location
-  name_resource_group = module.network_vpc_west.network_resource_group
+#module "k8" {
+#  source = "./Modules/K8"
+#  depends_on = [
+#    module.network_vpc_west
+#  ]
+#  location = var.location
+#  name_resource_group = module.network_vpc_west.network_resource_group
 
-}
-module "storage" {
-  depends_on = [
-    module.network_vpc_west
-  ]
-  source = "./Modules/Storage"
-  location = var.location
-  name_resource_group = module.network_vpc_west.network_resource_group.name
-}
+#}
