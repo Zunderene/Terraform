@@ -12,15 +12,14 @@ terraform {
   }
 }
 
-backend "azurerm" {
-    storage_account_name = "terraformstorageaccount"
-    container_name       = "terraformcontainer"
-    key                  = "terraformtfstatefile"
-    access_key           = "storagekey"
+ backend "azurerm" {
+    storage_account_name = "__terraformstorageaccount__"
+    container_name       = "__terraformcontainer__"
+    key                  = "__terraformtfstatefile__"
+    access_key           = "__storagekey__"
     features{
     }
-}
-
+  }
 
 
 module "network_vpc_west" {
