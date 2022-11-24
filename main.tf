@@ -13,10 +13,10 @@ terraform {
 }
 
 provider "azurerm" {
-  subscription_id = "d154b22a-00e9-4d61-bccd-1c77b06247da" 
-  client_id = "df4f9529-a125-4b6c-aed4-23b11c85efcf" 
-  client_secret = "hbW8Q~Uh2SQ~T9lAnhCmj6IqC50rYaAUXOOZ.cTC" 
-  tenant_id = "b904303e-f6ca-40b3-9015-8948e09309bf" 
+  subscription_id = "326e5b7f-edaa-4ea8-92cd-8ec52eadfbac" 
+  client_id = "79022cc2-c368-4db5-9f68-ff1299e4f401" 
+  client_secret = "d9i8Q~x_ZUCI~LYSrndgWWm79BVYVOe-EBL4rajS" 
+  tenant_id = "523c5590-88ac-498d-ae92-bc3f4f3f7b28" 
   features {}
 }
 
@@ -31,7 +31,6 @@ module "network_vpc_west" {
   network-vnet-cidr = "10.128.0.0/16"
 
 }
-
 
 module "VM" {
   depends_on = [
@@ -78,6 +77,7 @@ module "k8" {
   name_resource_group = module.network_vpc_west.network_resource_group
 
 }
+
 module "storage" {
   depends_on = [
     module.network_vpc_west
