@@ -7,6 +7,7 @@ terraform {
     features{
     }
   }
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -20,7 +21,11 @@ terraform {
   }
 }
 
-
+  provider "azurerm" {
+    features {
+      
+    }
+  }
 
 
 module "network_vpc_west" {

@@ -2,7 +2,7 @@
 resource "random_string" "vm-name" {
   length  = 8
   upper   = false
-  number  = false
+  numeric  = false
   lower   = true
   special = false
 }
