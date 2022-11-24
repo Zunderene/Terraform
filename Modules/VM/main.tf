@@ -109,7 +109,8 @@ resource "tls_private_key" "ssh" {
 resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
 
     depends_on=[azurerm_network_interface.vm-private-nic]
-
+    
+    count = 2
     name                = "vm-${lower(var.entorno)}-${random_string.vm-name.result}-vm"
     location            = var.network_resource_group.location
     resource_group_name = var.network_resource_group.name
