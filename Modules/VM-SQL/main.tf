@@ -90,10 +90,10 @@ resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
 
 
 # Union de la interfaz de red con el grupo de seguridad.
-resource "azurerm_network_interface_security_group_association" "NSG" {
-  network_interface_id      = azurerm_network_interface.vm-private-nic-02.id 
-  network_security_group_id = azurerm_network_security_group.vm-nsg-02.id
-}
+#resource "azurerm_network_interface_security_group_association" "NSG" {
+#  network_interface_id      = azurerm_network_interface.vm-private-nic-02.id 
+#  network_security_group_id = azurerm_network_security_group.vm-nsg-02.id
+#}
 
 #resource "azurerm_subnet_network_security_group_association" "GSUBC" {
 #  subnet_id                 = var.network_subnet
