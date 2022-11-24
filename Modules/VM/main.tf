@@ -70,10 +70,6 @@ resource "azurerm_network_security_group" "vm-nsg" {
 
 }
 
-resource "az" "name" {
-  
-}
-
 resource "azurerm_public_ip" "vm_ip" {
   name                = "ip-${random_string.vm-name.result}-public"
   location            = var.network_resource_group.location
@@ -109,7 +105,6 @@ resource "tls_private_key" "ssh" {
 resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
 
     depends_on=[azurerm_network_interface.vm-private-nic]
-    
     count = 2
     name                = "vm-${lower(var.entorno)}-${random_string.vm-name.result}-vm"
     location            = var.network_resource_group.location
