@@ -20,7 +20,7 @@ variable "location" {
 variable "entorno"{
   type = string
   description = "Esta variable indica de que modulo fue procesado"
-  #default="cloud"
+  default="jira"
 }
 
 
