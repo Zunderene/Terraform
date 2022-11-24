@@ -1,6 +1,6 @@
 ####################
 # Common Variables #
 ####################
-proyecto     = "kopicloud"
+proyecto     = "cloud"
 environment = "entorno"
 location    = "westeurope"
