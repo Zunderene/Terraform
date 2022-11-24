@@ -13,10 +13,10 @@ terraform {
 }
 
 provider "azurerm" {
-  subscription_id = "d154b22a-00e9-4d61-bccd-1c77b06247da" 
-  client_id = "df4f9529-a125-4b6c-aed4-23b11c85efcf" 
-  client_secret = "hbW8Q~Uh2SQ~T9lAnhCmj6IqC50rYaAUXOOZ.cTC" 
-  tenant_id = "b904303e-f6ca-40b3-9015-8948e09309bf" 
+  subscription_id = "3fc95c44-856c-4cf4-bba4-e47a118a15e0" 
+  client_id = "736b4a43-569b-4821-83fa-ae64021824a7" 
+  client_secret = "nXs8Q~HHvKwGKsRG2pJUZDzXcK27syqHW_wFeaQm" 
+  tenant_id = "d1c80090-db78-4d4d-8950-d47ed6cc756b" 
   features {}
 }
 
