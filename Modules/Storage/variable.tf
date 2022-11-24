@@ -1,7 +1,7 @@
 #----------------------------------- Storage ---------------------
 
 variable "Storage_name1" {
-  default = "storage1hector"
+  default = "strcopysecu"
 }
 
 #Localizacion 
