@@ -1,1 +1,6 @@
 .terraform
+.terraform.lock.hcl
+*.tfstate
+.tftate.backup
+.git
+VM-Global/7jjasdfjfk
