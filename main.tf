@@ -21,13 +21,6 @@ terraform {
   }
 }
 
-  provider "azurerm" {
-    features {
-      
-    }
-  }
-
-
 module "network_vpc_west" {
   source = "./Modules/Network"
   location = var.location
@@ -37,7 +30,6 @@ module "network_vpc_west" {
   network-vnet-cidr = "10.128.0.0/16"
 
 }
-
 
 module "VM" {
   depends_on = [
@@ -84,11 +76,12 @@ module "k8" {
   name_resource_group = module.network_vpc_west.network_resource_group
 
 }
-module "storage" {
-  depends_on = [
-    module.network_vpc_west
-  ]
-  source = "./Modules/Storage"
-  location = var.location
-  name_resource_group = module.network_vpc_west.network_resource_group.name
-}
+
+#module "storage" {
+#  depends_on = [
+#    module.network_vpc_west
+#  ]
+#  source = "./Modules/Storage"
+#  location = var.location
+#  name_resource_group = module.network_vpc_west.network_resource_group.name
+#}

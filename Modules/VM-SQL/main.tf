@@ -25,48 +25,11 @@ resource "random_string" "vm-name" {
 # Este grupo de recurso esta pensado solo accesible desde el interior de la red virtual no sale de internet
 # Advite acceso puerto postgresSQL y SSH
 #
-resource "azurerm_network_security_group" "vm-nsg-02" {
-    depends_on = [ var.network_resource_group]
-    name                    = "sql-${lower(var.entorno)}-${random_string.vm-name.result}-nsg"
-    location                = var.network_resource_group.location
-    resource_group_name     = var.network_resource_group.name
-
-    security_rule {
-        name                       = "AllowSQL"
-        description                = "Allow SQL"
-        priority                   = 100
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "5432"
-        source_address_prefix      = "VirtualNetwork"
-        destination_address_prefix = "VirtualNetwork"
-  }
-
-  security_rule {
-        name                       = "AllowSSH"
-        description                = "Allow SSH"
-        priority                   = 150
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "22"
-        source_address_prefix      = "VirtualNetwork"
-        destination_address_prefix = "VirtualNetwork"
-  }
-  tags = {
-    environment = var.entorno
-  }
-
-}
-
 # Crea la interfaz de red VM
 resource "azurerm_network_interface" "vm-private-nic-02" {
   depends_on=[var.network_resource_group]
 
-  name                = "vm-${random_string.vm-name.result}-nic"
+  name                = "vm-${random_string.vm-name.result}-nicOLD"
   location            = var.network_resource_group.location
   resource_group_name = var.network_resource_group.name
   
