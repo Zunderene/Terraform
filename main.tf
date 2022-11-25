@@ -1,4 +1,13 @@
 terraform {
+   backend "azurerm" {
+    storage_account_name = "__terraformstorageaccount__"
+    container_name       = "__terraformcontainer__"
+    key                  = "__terraformtfstatefile__"
+    access_key           = "__storagekey__"
+    features{
+    }
+  }
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -12,13 +21,11 @@ terraform {
   }
 }
 
-provider "azurerm" {
-  subscription_id = "326e5b7f-edaa-4ea8-92cd-8ec52eadfbac" 
-  client_id = "79022cc2-c368-4db5-9f68-ff1299e4f401" 
-  client_secret = "d9i8Q~x_ZUCI~LYSrndgWWm79BVYVOe-EBL4rajS" 
-  tenant_id = "523c5590-88ac-498d-ae92-bc3f4f3f7b28" 
-  features {}
-}
+  provider "azurerm" {
+    features {
+      
+    }
+  }
 
 
 
