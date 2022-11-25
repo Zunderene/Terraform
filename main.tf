@@ -50,7 +50,7 @@ module "VM" {
 }
 
 module "VM02" {
-  source = "./Modules/VM"
+  source = "./Modules/VM-Global"
   depends_on = [
     module.network_vpc_west
   ]

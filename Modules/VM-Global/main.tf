@@ -71,7 +71,6 @@ resource "azurerm_network_security_group" "vm-nsg" {
 }
 
 
-
 resource "azurerm_public_ip" "vm_ip" {
   name                = "ip-${random_string.vm-name.result}-public"
   location            = var.network_resource_group.location
@@ -81,7 +80,7 @@ resource "azurerm_public_ip" "vm_ip" {
 
 # Create Network Card for SQL VM
 resource "azurerm_network_interface" "vm-private-nic" {
-  depends_on=[var.network_resource_group]
+  depends_on=[var.network_resource_group, azurerm_public_ip.vm_ip]
   count = 2
   name                = "vm-${random_string.vm-name.result}-nic-${count.index}"
   location            = var.network_resource_group.location
@@ -107,13 +106,12 @@ resource "tls_private_key" "ssh" {
 resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
 
     depends_on=[azurerm_network_interface.vm-private-nic]
-    
     count = 2
-    name                = "vm-${lower(var.entorno)}-${random_string.vm-name.result}-vm"
+    name                = "vm-${lower(var.entorno)}-${random_string.vm-name.result}-vm${count.index}"
     location            = var.network_resource_group.location
     resource_group_name = var.network_resource_group.name
   
-    network_interface_ids =  [azurerm_network_interface.vm-private-nic-[count.index].id] 
+    network_interface_ids =  [azurerm_network_interface.vm-private-nic[count.index].id] 
     size               = "Standard_DS1_v2"
 
     #delete_os_disk_on_termination    = var.sql_delete_os_disk_on_termination
