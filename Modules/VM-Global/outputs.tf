@@ -3,5 +3,5 @@ output "ssh_key_vm_pem" {
 }
 
 output "public_ip" {
-  value = azurerm_linux_virtual_machine.my_terraform_vm[0].public_ip_address
+  value = azurerm_linux_virtual_machine.my_terraform_vm.public_ip_address
 }

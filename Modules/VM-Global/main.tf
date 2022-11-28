@@ -2,101 +2,63 @@
 ## Azure VM - Main ##
 #####################################
 
-# Generate a random vm name
-resource "random_string" "vm-name" {
-  length  = 8
-  upper   = false
-  number  = false
-  lower   = true
-  special = false
-}
-
-
-#---------------------------------------------------------------
-# Generates SSH2 key Pair for Linux VM's (Dev Environment only)
-#---------------------------------------------------------------
-#resource "tls_private_key" "rsa" {
-#  count     = var.generate_admin_ssh_key ? 1 : 0
-#  algorithm = "RSA"
-#  rsa_bits  = 4096
-#}
-
-## Creacion del grupo de seguridad para dar acceso SSH y SQL
-# Este grupo de recurso esta pensado solo accesible desde el interior de la red virtual no sale de internet
-# Advite acceso puerto postgresSQL y SSH
-#
-locals {
-  nsg_settings = [
-    { name = "sql-${lower(var.entorno)}-${random_string.vm-name.result}-nsg-01" },
-    { name = "sql-${lower(var.entorno)}-${random_string.vm-name.result}-nsg-02"},
-  ]
-}
 
 resource "azurerm_network_security_group" "vm-nsg" {
-    depends_on = [ var.network_resource_group]
-    count     = 2
-    name                    = local.nsg_settings[count.index].name
-    location                = var.network_resource_group.location
-    resource_group_name     = var.network_resource_group.name
 
-    security_rule {
-        name                       = "AllowSQL"
-        description                = "Allow SQL"
-        priority                   = 100
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "5432"
-        source_address_prefix      = local.nsg_settings[count.index] == 0 ? "Internet" : "VirtualNetwork"
-        destination_address_prefix = local.nsg_settings[count.index] == 0 ? "Internet" : "VirtualNetwork"
-  }
-
-  security_rule {
-        name                       = "AllowSSH"
-        description                = "Allow SSH"
-        priority                   = 150
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "22"
-        source_address_prefix      = local.nsg_settings[count.index] == 0 ? "*" : "VirtualNetwork"
-        destination_address_prefix = local.nsg_settings[count.index] == 0 ? "*" : "VirtualNetwork"
-  }
+    name                    = var.name
+    location                = var.location
+    resource_group_name     = var.network_resource_group_name
+    
+    #security_rule = var.securities_rule_vm[0]
   tags = {
-    environment = var.entorno
+    environment = var.name
   }
+}
+
+resource "azurerm_network_security_rule" "nsr" {
+
+  for_each = var.securities_rule_vm
+  name                       = each.key
+  priority                   = each.value.priority
+  direction                  = each.value.direction
+  access                     = each.value.access
+  protocol                   = each.value.protocol
+  source_port_range          = each.value.source_port_range
+  destination_port_range     = each.value.destination_port_range
+  source_address_prefix      = each.value.source_address_prefix
+  destination_address_prefix = each.value.destination_address_prefix
+  
+  network_security_group_name = azurerm_network_security_group.vm-nsg.name
+  resource_group_name = var.network_resource_group_name
+
+
 
 }
 
-
 resource "azurerm_public_ip" "vm_ip" {
-  name                = "ip-${random_string.vm-name.result}-public"
-  location            = var.network_resource_group.location
-  resource_group_name = var.network_resource_group.name
+  count =  var.if_public_ip ? 1 : 0
+
+  name                = "ip-public-${var.name}"
+  location            = var.location
+  resource_group_name = var.network_resource_group_name
   allocation_method   = "Static"
 }
 
-# Create Network Card for SQL VM
 resource "azurerm_network_interface" "vm-private-nic" {
-  depends_on=[var.network_resource_group, azurerm_public_ip.vm_ip]
-  count = 2
-  name                = "vm-${random_string.vm-name.result}-nic-${count.index}"
-  location            = var.network_resource_group.location
-  resource_group_name = var.network_resource_group.name
+
+  name                = "vm-${var.name}-ni"
+  location            = var.location
+  resource_group_name = var.network_resource_group_name
   
   ip_configuration {
-    name                          = "Internet"
+    name                          = "${var.name}-ip-configure"
     subnet_id                     = var.network_subnet
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = count.index == 0 ? azurerm_public_ip.vm_ip.id : null
+    public_ip_address_id          = var.if_public_ip  ? azurerm_public_ip.vm_ip[0].id : null
   }
 
-  tags = { 
-    environment = var.entorno
-  }
 }
+
 resource "tls_private_key" "ssh" {
     algorithm = "RSA"
     rsa_bits = 4096
@@ -106,49 +68,41 @@ resource "tls_private_key" "ssh" {
 resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
 
     depends_on=[azurerm_network_interface.vm-private-nic]
-    count = 2
-    name                = "vm-${lower(var.entorno)}-${random_string.vm-name.result}-vm${count.index}"
-    location            = var.network_resource_group.location
-    resource_group_name = var.network_resource_group.name
+    name                = "vm-${var.name}-vm"
+    location            = var.location
+    resource_group_name = var.network_resource_group_name
   
-    network_interface_ids =  [azurerm_network_interface.vm-private-nic[count.index].id] 
-    size               = "Standard_DS1_v2"
+    network_interface_ids =  [azurerm_network_interface.vm-private-nic.id] 
+    size                  = var.size 
 
     #delete_os_disk_on_termination    = var.sql_delete_os_disk_on_termination
     #delete_data_disks_on_termination = var.sql_delete_data_disks_on_termination
 
   os_disk {
-    name                    = "disk${random_string.vm-name.result}vm-${count.index}"
+    name                    = "disk${var.name}vm"
     caching                 = "ReadWrite"
-    storage_account_type    = "Standard_LRS"
+    storage_account_type    = var.storage_account_type
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
+    publisher = var.source_image_publisher
+    offer     = var.source_image_offer
+    sku       = var.source_image_sku
+    version   = var.source_image_version
   }
 
-  computer_name                   = "myvm"
-  admin_username                  = "azureuser"
+  computer_name                   = var.name
+  admin_username                  = var.admin_username
   disable_password_authentication = true
 
   admin_ssh_key {
-    username   = "azureuser"
+    username   = var.admin_username
     public_key = tls_private_key.ssh.public_key_openssh
   }
 
 }
 
-
 resource "azurerm_network_interface_security_group_association" "NSG-Public" {
-  count = 2
-  network_interface_id      = azurerm_network_interface.vm-private-nic[count.index].id 
-  network_security_group_id = azurerm_network_security_group.vm-nsg[count.index].id
+  network_interface_id      = azurerm_network_interface.vm-private-nic.id 
+  network_security_group_id = azurerm_network_security_group.vm-nsg.id
 }
-
-#resource "azurerm_network_interface_security_group_association" "NSG" {
-#  network_interface_id      = azurerm_network_interface.vm-private-nic-02.id 
-#  network_security_group_id = azurerm_network_security_group.vm-nsg-02.id
-#}

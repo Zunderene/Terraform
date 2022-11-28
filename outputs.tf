@@ -1,10 +1,5 @@
-output "ssh_key_vm_pem_02" {
-  value    =  module.VM02.ssh_key_vm_pem
-  sensitive = true
-}
-
 output "ssh_key_vm_pem" {
-  value    =  module.VM.ssh_key_vm_pem
+  value    =  {for k, value in module.VM : k => value.ssh_key_vm_pem}
   sensitive = true
 }
 
