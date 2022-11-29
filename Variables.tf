@@ -1,9 +1,3 @@
-#############################
-## aplicacion - Variables ##
-#############################
-
-# Nombre del proyecto.
-
 variable "proyecto" {
   type = string
   description = "Este nombre se usa para nombrar todos los recursos"

@@ -8,7 +8,7 @@ terraform {
     }
 
     tls = {
-      source = "hashicorp/tls"
+      source  = "hashicorp/tls"
       version = "~>4.0"
     }
   }
@@ -63,7 +63,7 @@ module "k8" {
   depends_on = [
     module.network_vpc_west
   ]
+  location            = var.location
   location = var.__location__
   name_resource_group = module.network_vpc_west.network_resource_group
-
 }
