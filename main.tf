@@ -23,14 +23,34 @@ provider "azurerm" {
   features {}
 }
 
+# Creación del grupo de recursos.
+resource "azurerm_resource_group" "RG" {
+  name     = "${var.__gruporesource__}-RG"
+  location = var.__location__
+}
+
+
+
 module "network_vpc_west" {
+  depends_on = [
+    azurerm_resource_group.RG
+  ]
   source = "./Modules/Network"
+  resource_group = azurerm_resource_group.RG.name
   location = var.__location__
   network-subnet-cidr = var.__network-subnet-cidr__
   network-vnet-cidr = var.__network-vnet-cidr__
-  entorno = "cloud"
-  proyecto = "jira"
 
+}
+
+module "k8" {
+  source = "./Modules/K8"
+  depends_on = [
+    module.network_vpc_west
+  ]
+  location = var.__location__
+  name_resource_group = azurerm_resource_group.RG
+  subnet = module.network_vpc_west.network_subnet_id
 }
 
 module "VM" {
@@ -46,23 +66,15 @@ module "VM" {
     source_image_publisher =  each.value.source_image_publisher
     storage_account_type = each.value.storage_account_type
     admin_username = each.value.admin_username
-    location = each.value.location
+    location = var.__location__
     size = each.value.size
     if_public_ip = each.value.if_public_ip
     securities_rule_vm = each.value.securities_rule_vm
 
 
-  network_resource_group_name = module.network_vpc_west.network_resource_group.name
+  network_resource_group_name = azurerm_resource_group.RG.name
   network_subnet = module.network_vpc_west.network_subnet_id
 
 
 }
 
-module "k8" {
-  source = "./Modules/K8"
-  depends_on = [
-    module.network_vpc_west
-  ]
-  location = var.__location__
-  name_resource_group = module.network_vpc_west.network_resource_group
-}

@@ -5,11 +5,10 @@
 
 resource "azurerm_network_security_group" "vm-nsg" {
 
-    name                    = var.name
+    name                    = "${var.name}-vm-nsg"
     location                = var.location
     resource_group_name     = var.network_resource_group_name
     
-    #security_rule = var.securities_rule_vm[0]
   tags = {
     environment = var.name
   }
@@ -65,7 +64,7 @@ resource "tls_private_key" "ssh" {
 }
 
 # Create virtual machine
-resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
+resource "azurerm_linux_virtual_machine" "vm" {
 
     depends_on=[azurerm_network_interface.vm-private-nic]
     name                = "vm-${var.name}-vm"
@@ -75,8 +74,6 @@ resource "azurerm_linux_virtual_machine" "my_terraform_vm" {
     network_interface_ids =  [azurerm_network_interface.vm-private-nic.id] 
     size                  = var.size 
 
-    #delete_os_disk_on_termination    = var.sql_delete_os_disk_on_termination
-    #delete_data_disks_on_termination = var.sql_delete_data_disks_on_termination
 
   os_disk {
     name                    = "disk${var.name}vm"

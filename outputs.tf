@@ -1,5 +1,10 @@
-output "ssh_key_vm_pem" {
-  value    =  {for k, value in module.VM : k => value.ssh_key_vm_pem}
+output "VMS" {
+  value    =  {for k, value in module.VM : k => value}
+  sensitive = true
+}
+
+output "K8S" {
+  value = module.k8.kube_ip_private
   sensitive = true
 }
 

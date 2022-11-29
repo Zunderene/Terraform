@@ -33,6 +33,10 @@ output "kube_config" {
   sensitive = true
 }
 
+output "kube_ip_private" {
+  value = azurerm_kubernetes_cluster.k8s.node_resource_group
+}
+
 output "resource_group_name" {
   value = var.name_resource_group
 }

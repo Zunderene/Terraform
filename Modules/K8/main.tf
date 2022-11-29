@@ -14,6 +14,8 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     name       = var.default_var
     node_count = var.agent_count
     vm_size    = var.vm_size
+    vnet_subnet_id = var.subnet
+
   }
 
   # Configuración básica de la red para el clúster

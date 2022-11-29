@@ -1,15 +1,3 @@
-variable "proyecto" {
-  type = string
-  description = "Este nombre se usa para nombrar todos los recursos"
-  default = "jira"
-}
-
-# Entorno
-variable "entorno"{
-  type = string
-  description = "Esta variable indica de que modulo fue procesado"
-  default="jira"
-}
 
 variable "__location__" {}
 variable "__gruporesource__" {}
