@@ -58,12 +58,12 @@ module "VM" {
 
 }
 
-#module "k8" {
-#  source = "./Modules/K8"
-#  depends_on = [
-#    module.network_vpc_west
-#  ]
-#  location = var.__location__
-#  name_resource_group = module.network_vpc_west.network_resource_group
+module "k8" {
+  source = "./Modules/K8"
+  depends_on = [
+    module.network_vpc_west
+  ]
+  location = var.__location__
+  name_resource_group = module.network_vpc_west.network_resource_group
 
-#}
+}
