@@ -11,7 +11,7 @@ Index
 
 ## What kind of infrastructure creates?<a name="item1"></a>
 
-This repository creates an infrastructure in Microsoft Azure with a Virtual Network and two connected subnets. The first one has 2 virtual machines and the second one a Kubernetes cluster. 
+This repository creates an infrastructure in Microsoft Azure with a Virtual Network and one connected subnets. 
 Look picture below:
 ![Infrastructure](https://github.com/jbcoleto/Terraform/blob/main/terraformProject.drawio.png)
 
