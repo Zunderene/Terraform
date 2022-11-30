@@ -8,9 +8,6 @@ __network-subnet-cidr__ = "10.128.1.0/24"
 
 __maquinas__ = {
     "VM01" = {
-    name = "maquina01"
-    location = "westeurope"
-    resource_group_name = "jira"
     size = "Standard_DS1_v2"
     source_image_offer = "UbuntuServer"
     source_image_publisher = "Canonical"
@@ -18,7 +15,7 @@ __maquinas__ = {
     admin_username = "azureuser"
     if_public_ip = false
     securities_rule_vm = {
-        "rule01" = {
+        "rule-ssh" = {
             priority                   = 100
             direction                  = "Inbound"
             access                     = "Allow"
@@ -28,7 +25,7 @@ __maquinas__ = {
             source_address_prefix      =  "*"
             destination_address_prefix =  "*"
         },
-        "rule02" = {
+        "rule-sql" = {
             priority                   = 101
             direction                  = "Inbound"
             access                     = "Allow"
@@ -42,9 +39,6 @@ __maquinas__ = {
     
   },
   "VM02" = {
-    name = "maquina02"
-    location = "westeurope"
-    resource_group_name = "jira"
     size = "Standard_DS1_v2"
     source_image_offer = "UbuntuServer"
     source_image_publisher = "Canonical"
