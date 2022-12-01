@@ -8,6 +8,10 @@ resource "azurerm_network_security_group" "vm-nsg" {
     name                    = "${var.name}-vm-nsg"
     location                = var.location
     resource_group_name     = var.network_resource_group_name
+
+    lifecycle {
+      create_before_destroy = true
+  }
     
   tags = {
     environment = var.name

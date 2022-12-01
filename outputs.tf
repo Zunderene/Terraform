@@ -3,8 +3,8 @@ output "VMS" {
   sensitive = true
 }
 
-output "K8S" {
-  value = module.k8.kube_ip_private
-  sensitive = true
-}
+#output "K8S" {
+#  value = module.k8.kube_ip_private
+#  sensitive = true
+#}
 
