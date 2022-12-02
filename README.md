@@ -11,7 +11,7 @@ Index
 
 ## What kind of infrastructure creates?<a name="item1"></a>
 
-This repository creates an infrastructure in Microsoft Azure with a Virtual Network and one connected subnets. 
+This repository creates an infrastructure in Microsoft Azure with 2 virtual machines and a Kubernetes cluster inside a subnet within a Virtual Network.
 Look picture below:
 ![Infrastructure](https://github.com/jbcoleto/Terraform/blob/main/terraformProject.drawio.png)
 
@@ -81,58 +81,6 @@ For Virtual Machines:
 - *public_ip* : public IP to access to the Virtual Machine from the internet
 - *private_ip* : private IP to access to the Virtual Machine from the subnet
 - *userVM* : administrator username of the Virtual Machine
-8. Save the output in a variable to use en DevOps
-`$variable_output = terraform output -json  | ConvertFrom-Json `
-9. Read one specific variable from the output variable
-`$variable_output.<specific_variable>.value.<resource>` e.g.: `$planObj.ssh_key_vm_pem.value.VM01`
-
-8. Use variables in automation
-`terraform output -raw variable` ELIMINAR?????
-
-
-## Variables to modify<a name="item5"></a>
-These variables must be modified in *prod.tfvars* file.
-
-There is an example in *prod_example.tfvars*.
-
-**Azure account**
-- *storage_account_name* = terraformstorageaccount
-- *container_name* = terraformcontainer
-- *key* = terraformtfstatefile
-- *access_key* = storagekey
-
-**General info**
-- *project* : name of the project name (it will create a resource group with the same name)
-- *location* : location of the resources
-- *environment* : application program language
-
-**Network**
-- *name_network* : ¿??
-- *network-vnet-cidr* : Ip ranges of the virtual network (e.g.: "10.128.1.0/16")
-- *network-subnet-cidr* : Ip ranges of the subnet (e.g.: "10.128.1.0/24")
-
-**Virtual Machine**
-- *name_VM* : ¿??
-- *sql_admin_username* : administrator name of the virtual machine
-- *sql_admin_password* : password of the virtual machine
-
-**K8**
-- *cluster_name* : name for the Kubernetes Cluster
-- *tags* : tag for Kubernetes Cluster
-- *agent_count* : initial number of nodes which should exist in this Node Pool (between 1 and 1000)
-- *vm_size* : size of the virtual machine (e.g. "Standard_D2_v2")
-- *load_balancer_sku* : SKU of the Load Balancer (e.g. "standard")
-- *dns_prefix* : DNS prefix specified when creating the managed cluster.
-
-
-
-## Outputs:<a name="item6"></a>
-The output file has a json format and contents different specific variable for each resource (Virtual Machine or Kubernete Cluster):
-- *ssh_key_vm_pem* : ssh key of the Virtual Machine
-- *public_ip* : public IP to access to the Virtual Machine from the internet
-- *ip_private_addres* : private IP to access to the Virtual Machine from the subnet
-- *admin_username* : administrator username of the Virtual Machine
-
 
 
 ## Contact:<a name="item7"></a>
