@@ -1,5 +1,12 @@
 terraform {
-
+   backend "azurerm" {
+    storage_account_name = "__terraformstorageaccount__"
+    container_name       = "__terraformcontainer__"
+    key                  = "__terraformtfstatefile__"
+    access_key           = "__storagekey__"
+    features{
+    }
+  }
 
   required_providers {
     azurerm = {
@@ -8,19 +15,10 @@ terraform {
     }
 
     tls = {
-      source  = "hashicorp/tls"
+      source = "hashicorp/tls"
       version = "~>4.0"
     }
   }
-}
-
-
-provider "azurerm" {
-   subscription_id = "d154b22a-00e9-4d61-bccd-1c77b06247da" 
-  client_id = "df4f9529-a125-4b6c-aed4-23b11c85efcf" 
-  client_secret = "hbW8Q~Uh2SQ~T9lAnhCmj6IqC50rYaAUXOOZ.cTC" 
-  tenant_id = "b904303e-f6ca-40b3-9015-8948e09309bf" 
-  features {}
 }
 
 # Creación del grupo de recursos.
