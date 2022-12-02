@@ -1,6 +1,6 @@
 variable "agent_count" {
   default     = 1
-  description = "Contador para la cantidad de clústeres a crear."
+  description = "Contador para la cantidad de nodos a crear."
 }
 
 variable "default_var" {
@@ -52,7 +52,7 @@ variable "sku_lb" {
 variable "identity" {
   type        = string
   default     = "SystemAssigned"
-  description = "Especifica el sisstema por defecto de autenticación."
+  description = "Especifica el sistema por defecto de autenticación."
 }
 
 variable "location" {
@@ -62,11 +62,11 @@ variable "location" {
 
 variable "name_resource_group" {
   #type        = string
-  #description = "Nombre asignado al grupo de recursos."
+  description = "Nombre asignado al grupo de recursos."
 }
 
 variable "subnet" {
-  
+  description = "Define en que subred se encontraran los nodos"
 }
 
 variable "ssh_public_key" {
