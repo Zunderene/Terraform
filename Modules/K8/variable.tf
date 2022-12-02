@@ -77,6 +77,6 @@ variable "ssh_public_key" {
 
 variable "tag_enviroment" {
   type        = string
-  default     = "Development"
+  default     = "K8S"
   description = "Tag para la creación del clúster"
 }

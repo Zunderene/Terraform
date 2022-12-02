@@ -3,8 +3,8 @@
 ####################
 __location__     = "westeurope"
 __gruporesource__ = "cloud"
-__network-vnet-cidr__ = "10.128.0.0/16"
-__network-subnet-cidr__ = "10.128.1.0/24"
+__network-vnet-cidr__ = ["10.128.0.0/16"]
+__network-subnet-cidr__ = ["10.128.1.0/24"]
 
 __maquinas__ = {
     "VM01" = {

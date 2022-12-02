@@ -16,11 +16,11 @@ variable "location" {
 
 
 variable "network-vnet-cidr" {
-  type        = string
+  type        = list
   description = "CIDR de la red virtual (VNET)"
 }
 
 variable "network-subnet-cidr" {
-  type        = string
+  type        = list
   description = "CIDR de la subnet"
 }
